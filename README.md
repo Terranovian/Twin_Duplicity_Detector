@@ -22,17 +22,12 @@ flowchart TD
     start([Program Called]) --> args(root dir)
     args --> dirLoop(Loop through all files inc;subs)
     dirLoop --> file(Add file_path and file_size to dict)
-    file --> dupeSize(Add file_path with duplicate size to dict)
-    dupeSize --> hash(Hash all files with duplicate files sizes)
-    file -- No Dupe Size --> Discard
-    
-    hash --> store(dict, key = hash, value = list'filename & filepath')
-    store -- continueHashing --> dirLoop
-    store -- allItemsHashed --> dictLoop(Loop through dictionary)
-    dictLoop --> dupHash(Store duplicate hashes in new dict)
-    dupHash --> dictLoop
+    file --> dupeSize(Add file_path from duplicate file_size to new-dict)
+    dupeSize --> hash(Hash all files within new-dict)
+    file -- file_size has only 1 value --> Discard/Ignore
+    hash --> store(dict, key = hash, value = file_path')
+    store -- continueHashing --> hash
+    store --> dupHash(Store hashes with multiple values in twin_dict)
     dupHash --> print(print duplicates filenames and file paths)
     print --> fin([END])
-
-    Notes -- imports --> imports(OS for os.walk, hashlib for file hashing, argparse for cli args)
 ```
