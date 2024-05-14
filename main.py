@@ -5,11 +5,19 @@ import hashlib  # For hashing files
 import argparse # For command line arguments (root_dir)
 
 def hash_file(file_path):
-    pass
+    with open(file_path, 'rb') as kip:
+        file_innards = kip.read()
+
+        hash_object = hashlib.blake2b()
+        hash_object.update(file_innards)
+        file_hash = hash_object.hexdigest()
+
+        return file_hash
 
 def file_hunter(root_dir):
     twins_dict = {}
     remove_keys = []
+    hashed_dict = {}
     for root, directories, files in os.walk(root_dir):
         for file in files:
             file_path = os.path.join(root, file)
@@ -31,10 +39,18 @@ def file_hunter(root_dir):
         del twins_dict[item]
     print("Files requiring further verification: ")
     for key, value in twins_dict.items():
-        filenames = [os.path.basename(file_path) for file_path in value]
-        print(f"Key: {key}, Filenames: {filenames}")
+        file_names = [os.path.basename(file_path) for file_path in value]
+        print(f"Key: {key}, Filenames: {file_names}")
 
-# Next step: iterating over remaining twins_dict and hashing files.
+
+    for value in twins_dict:
+        print(f"Now Hashing... {file_names}")
+        file_hashed = hash_file(value)
+        hashed_dict[file_path].append(file_hashed)
+
+        #Need to further search hashed_dict for duplicate files.
+
+
 
 
 def main():
